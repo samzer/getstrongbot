@@ -1,0 +1,34 @@
+#Folder
+venv
+
+# Emacs clutter
+TAGS
+TAGS~
+*~
+\#*# 
+.#*
+
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+.installed.cfg
+*.egg
+*.egg-info
+develop-eggs
+eggs
+bin
+build
+dist
+include
+lib
+lib64
+parts
+sdist
+var
+wheelhouse
+
+#Files
+.env
