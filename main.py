@@ -3,6 +3,7 @@ import logging
 import random
 import os
 import datetime
+import yaml
 
 from decouple import config
 from telegram.ext import Updater, CommandHandler
@@ -43,13 +44,14 @@ class GetStrongBot(object):
             "Dive Bomber Push-Up",
             "Tricep Dip",
         )
+        self.data = self._load_data()
 
     def start(self, bot, update):
         result_exercises = self._sample_5_excercises()
         result_text = "Today's exercise list:\n"
 
         for i, exer in enumerate(result_exercises):
-            result_text += f"{i+1}. {exer} \n"
+            result_text += f"{i+1}. {exer} : {result_exercises[exer]} \n"
 
         update.message.reply_text(result_text)
 
@@ -60,7 +62,23 @@ class GetStrongBot(object):
         seed = self._get_day_seed()
         random.seed(seed)
 
-        return random.sample(self.exercise_list, 5)
+
+        # shuffle the list to select randomly
+        # from upper, core and leg 
+        selection_list = [2,2,1]
+        random.shuffle(selection_list)
+
+        # Sample from each category
+        upper = random.sample(self.data['Upper'], selection_list[0])
+        core = random.sample(self.data['Core'], selection_list[1])
+        leg = random.sample(self.data['Leg'], selection_list[2])
+
+        # Combine the dicts
+        result = {}
+        for d in (upper + core + leg):
+            result.update(d)
+            
+        return result
 
     def _get_day_seed(self):
         '''
@@ -70,6 +88,11 @@ class GetStrongBot(object):
 
         return now.day
 
+    def _load_data(self):
+        with open('exercise.yaml') as f:
+            data = yaml.safe_load(f)
+
+        return data
 
 updater = Updater(BOT_TOKEN)
 getstrongbot = GetStrongBot()
