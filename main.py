@@ -6,7 +6,8 @@ import datetime
 import yaml
 
 from decouple import config
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Config variables
 BOT_TOKEN = config('BOT_TOKEN')
@@ -16,55 +17,60 @@ if DEBUG:
     LOG_LEVEL = logging.DEBUG
 else:
     LOG_LEVEL = logging.INFO
-    
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=LOG_LEVEL)
 logger = logging.getLogger(__name__)
 
 
+def start(bot, update):
+	update.message.reply_text("You can start by typing /help")
+
 def help(bot, update):
-	update.message.reply_text("Help?!")
+	update.message.reply_text('''
+Following are the list of commands:
+1. /workout: Gives you the list of exercise for the day
+                              ''')
 
 
 class GetStrongBot(object):
     def __init__(self):
-        self.exercise_list = (
-            "Pull Ups",
-            "Push Up",
-            "Squat",
-            "Burpee",
-            "Hand Stand Push Up",
-            "Plank",
-            "Sit-up",
-            "Leg Raise",
-            "Jack Knife",
-            "Crunch",
-            "Chin Up",
-            "Plank Up",
-            "Inchworm to Push-Up",
-            "Dive Bomber Push-Up",
-            "Tricep Dip",
-        )
         self.data = self._load_data()
 
-    def start(self, bot, update):
-        result_exercises = self._sample_5_excercises()
-        result_text = "Today's exercise list:\n"
+    def workout(self, bot, update):
+        chat_id = update.message.chat.id
+        bot.send_message(chat_id=chat_id,
+                             text="How many rounds?",
+                             parse_mode=telegram.ParseMode.MARKDOWN,
+                             reply_markup=self._round_keyboard_options())
+
+    def workout_reply(self, bot, update):
+        query = update.callback_query
+        chat_id = query.message.chat_id
+        message_id = query.message.message_id
+        name = query.message.chat.first_name
+        rounds = query.data
+        result_text = f'*{name}*, Your exercise,\nshould you choose to accept are:\n'
+        result_exercises = self._sample_5_excercises(chat_id)
 
         for i, exer in enumerate(result_exercises):
-            result_text += f"{i+1}. {exer} : {result_exercises[exer]} \n"
+            result_text += f'{i+1}. {exer} : {result_exercises[exer]} \n'
+        result_text+=f'\n*Total rounds: {rounds}*'
 
-        update.message.reply_text(result_text)
+        bot.edit_message_text(chat_id = chat_id,
+                             message_id = message_id,
+                             text = result_text,
+                             parse_mode = telegram.ParseMode.MARKDOWN,)
 
-    def _sample_5_excercises(self):
+
+    def _sample_5_excercises(self, chat_id):
         '''
 		Return a list of 5 random exercises
         '''
         seed = self._get_day_seed()
-        random.seed(seed)
-
+        random.seed(seed + chat_id)
 
         # shuffle the list to select randomly
-        # from upper, core and leg 
+        # from upper, core and leg
         selection_list = [2,2,1]
         random.shuffle(selection_list)
 
@@ -77,7 +83,7 @@ class GetStrongBot(object):
         result = {}
         for d in (upper + core + leg):
             result.update(d)
-            
+
         return result
 
     def _get_day_seed(self):
@@ -94,9 +100,22 @@ class GetStrongBot(object):
 
         return data
 
+    def _round_keyboard_options(self):
+      keyboard = [[InlineKeyboardButton('1', callback_data='1')],
+                  [InlineKeyboardButton('2', callback_data='2')],
+                  [InlineKeyboardButton('3', callback_data='3')],
+                  [InlineKeyboardButton('4', callback_data='4')],
+                  [InlineKeyboardButton('5', callback_data='5')],
+                  [InlineKeyboardButton('6', callback_data='6')]]
+
+      return InlineKeyboardMarkup(keyboard)
+
+
 updater = Updater(BOT_TOKEN)
 getstrongbot = GetStrongBot()
-updater.dispatcher.add_handler(CommandHandler('start', getstrongbot.start))
+updater.dispatcher.add_handler(CommandHandler('workout', getstrongbot.workout))
+updater.dispatcher.add_handler(CallbackQueryHandler(getstrongbot.workout_reply, pattern='[1-6]'))
 updater.dispatcher.add_handler(CommandHandler('help', help))
+updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.start_polling()
 updater.idle()
