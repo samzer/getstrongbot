@@ -47,10 +47,10 @@ class GetStrongBot(object):
         query = update.callback_query
         chat_id = query.message.chat_id
         message_id = query.message.message_id
-        name = query.message.chat.first_name
+        name = query.from_user.first_name
         rounds = query.data
         result_text = f'*{name}*, Your exercise,\nshould you choose to accept are:\n'
-        result_exercises = self._sample_5_excercises(chat_id)
+        result_exercises = self._sample_5_excercises(query.from_user.id)
 
         for i, exer in enumerate(result_exercises):
             result_text += f'{i+1}. {exer} : {result_exercises[exer]} \n'
