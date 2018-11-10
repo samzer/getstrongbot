@@ -88,7 +88,7 @@ class GetStrongBot(object):
                                 parse_mode=telegram.ParseMode.MARKDOWN,)
         else:
             bot.send_message(chat_id=chat_id,
-                             text="Please give an exercise name..",
+                             text="Please give an exercise name in the format '/describe <name>'",
                              parse_mode=telegram.ParseMode.MARKDOWN,)
 
     def _get_image_path(self, name):
