@@ -1,4 +1,4 @@
 python-decouple==3.1
 python-telegram-bot==11.1.0
 PyYAML==3.13
-
+fuzzywuzzy==0.17.0

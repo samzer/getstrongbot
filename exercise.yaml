@@ -1,18 +1,48 @@
 Upper:
- - "Pull Ups" : "5"
- - "Push Up" : "20"
- - "Hand Stand Push Up" : "10"
- - "Chin Up" : "5"
- - "Tricep Dip" : "15"
- - "Inchworm to Push-Up" : "20"
- - "Dive Bomber Push-Up" : "20"
+ - "Pull Ups":
+      value: "5"
+      file: "img/pull_up.jpeg"
+ - "Push Up":
+      value: "20"
+      file: "img/push_up.jpg"
+ - "Hand Stand Push Up":
+      value: "10"
+      file: "img/hand_stand_push_up.jpeg"
+ - "Chin Up":
+      value: "5"
+      file: "img/chin_up.jpg"
+ - "Tricep Dip":
+      value: "15"
+      file: "img/tricep_dip.jpg"
+ - "Inchworm to Push-Up":
+      value: "20"
+      file: "img/inchworm_to_pushup.jpg"
+ - "Dive Bomber Push-Up":
+      value: "20"
+      file: "img/dive_bomber_pushup.png"
 Core:
- - "Plank" : "1 min"
- - "Sit-up" : "20"
- - "Jack Knife" : "20"
- - "Crunch" : "20"
- - "Burpee" : "15"
- - "Leg Raise" : "20"
+ - "Plank":
+      value: "1 min"
+      file: "img/plank.jpg"
+ - "Sit-up":
+      value: "20"
+      file: "img/sit_up.jpg"
+ - "Jack Knife":
+      value: "20"
+      file: "img/jack_knife.png"
+ - "Crunch":
+      value: "20"
+      file: "img/crunch.jpg"
+ - "Burpee":
+      value: "15"
+      file: "img/burpee.jpg"
+ - "Leg Raise":
+      value: "20"
+      file: "img/leg_raise.jpg"
 Leg:
- - "Squat" : "30"
- - "Lunges" : "10 each leg"
+ - "Squat":
+      value: "30"
+      file: "img/squat.jpg"
+ - "Lunges":
+      value: "10 each leg"
+      file: "img/lunges.jpg"
