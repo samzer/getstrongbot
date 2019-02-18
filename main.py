@@ -10,7 +10,7 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from fuzzywuzzy import fuzz
 
-# Config variables
+# Config variables 🤓
 BOT_TOKEN = config('BOT_TOKEN')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
